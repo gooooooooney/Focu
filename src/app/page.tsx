@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { ProjectsView } from "@/features/projects/components/projects-view";
 
-export default function Page() {
-return (
-  <Button>
-    hello world
-  </Button>
-)
+export default function HomePage() {
+  return (
+    <ProjectsView />
+  )
 }
