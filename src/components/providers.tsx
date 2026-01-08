@@ -1,6 +1,6 @@
 "use client"
 
-import { ClerkProvider, useAuth, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Authenticated, AuthLoading, ConvexReactClient, Unauthenticated } from "convex/react";
 
@@ -24,7 +24,6 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
                     disableTransitionOnChange
                 >
                     <Authenticated>
-                        <UserButton />
                         {children}
                     </Authenticated>
                     <Unauthenticated>
