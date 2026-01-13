@@ -1,7 +1,7 @@
 import { v } from "convex/values"
 import { mutation, query } from "./_generated/server"
 import { verifyAuth } from "./auth"
-import { Id } from "./_generated/dataModel"
+import { Doc, Id } from "./_generated/dataModel"
 
 export const getFiles = query({
     args: {
@@ -52,11 +52,7 @@ export const getFile = query({
             throw new Error("Unauthorized access to this project")
         }
 
-        return await ctx.db
-            .query("files")
-            .withIndex("by_project", q => q.eq("projectId", project._id))
-            // .order("desc")
-            .collect()
+        return await ctx.db.get("files", args.id)
     },
 })
 
@@ -364,3 +360,42 @@ export const updateFile = mutation({
 })
 
 
+
+export const getFilePath = query({
+    args: {
+
+        id: v.id("files")
+    },
+    async handler(ctx, args) {
+        const identity = await verifyAuth(ctx)
+
+        const file = await ctx.db.get("files", args.id)
+
+        if (!file) {
+            throw new Error("File not found")
+        }
+
+
+        const project = await ctx.db.get("projects", file.projectId)
+
+        if (!project) {
+            throw new Error("Project not found")
+        }
+
+        if (project.ownerId !== identity.subject) {
+            throw new Error("Unauthorized access to this project")
+        }
+
+        const path: {_id: Id<"files">, name: string}[] = []
+        let currentId: Id<"files"> | undefined = args.id
+
+        while (currentId) {
+            const file = await ctx.db.get("files", currentId) as Doc<"files">
+            if (!file) break
+            path.unshift({ _id: file._id, name: file.name })
+            currentId = file.parentId
+        }
+
+        return path;
+    },
+})

@@ -9,6 +9,7 @@ import { TreeItemWrapper } from "./tree-item-wrapper"
 import { cn } from "@/lib/utils"
 import { LoadingRow } from "./loading-row"
 import { RenameInput } from "./rename-input"
+import { useEditor } from "@/features/editor/hooks/use-editor"
 
 interface TreeProps {
     item: Doc<"files">
@@ -20,6 +21,7 @@ export const Tree = ({ item, level, projectId }: TreeProps) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const [isRenaming, setIsRenaming] = useState(false)
+
 
     const [creating, setCreating] = useState<"file" | "folder" | null>(null)
 
@@ -42,6 +44,8 @@ export const Tree = ({ item, level, projectId }: TreeProps) => {
         parentId: item._id,
         enabled: item.type === "folder",
     })
+
+    const { openFile, closeTab, activeTabId } = useEditor(projectId)
 
     const handleRename = (name: string) => {
         setIsRenaming(false)
@@ -74,6 +78,8 @@ export const Tree = ({ item, level, projectId }: TreeProps) => {
     if (item.type === "file") {
         const fileName = item.name
 
+        const isActive = activeTabId === item._id
+
         if (isRenaming) {
             return (
                 <RenameInput
@@ -92,14 +98,18 @@ export const Tree = ({ item, level, projectId }: TreeProps) => {
             <TreeItemWrapper
                 item={item}
                 level={level}
-                isActive={false}
-                onClick={() => { }}
-                onDoubleClick={() => { }}
+                isActive={isActive}
+                onClick={() => {
+                    openFile(item._id, { pinned: false })
+                }}
+                onDoubleClick={() => {
+                    openFile(item._id, { pinned: true })
+                }}
                 onRename={() => {
                     setIsRenaming(true)
                 }}
                 onDelete={() => {
-                    // TODO close tab
+                    closeTab(item._id)
                     deleteFile({
                         id: item._id,
                     })
@@ -215,7 +225,6 @@ export const Tree = ({ item, level, projectId }: TreeProps) => {
                     setIsRenaming(true)
                 }}
                 onDelete={() => {
-                    // TODO close tab
                     deleteFile({
                         id: item._id,
                     })
