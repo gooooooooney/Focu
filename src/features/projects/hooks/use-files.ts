@@ -13,6 +13,12 @@ export const useFilePath = (fileId: Id<"files"> | null) => {
 export const useCreateFile = () => {
     return useMutation(api.files.createFile)
 }
+
+export const useUpdateFile = () => {
+    return useMutation(api.files.updateFile)
+    // TODO optimistic mutation
+}
+
 export const useCreateFolder = () => {
     return useMutation(api.files.createFolder)
 }

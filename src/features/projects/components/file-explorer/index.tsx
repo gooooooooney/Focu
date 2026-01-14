@@ -16,7 +16,7 @@ interface FileExplorerProps {
 }
 
 export const FileExplorer: React.FC<FileExplorerProps> = ({ projectId }) => {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(true)
 
     const [collapseKey, setCollapseKey] = useState(0)
 
