@@ -9,7 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^3.0.6",
+    "@ai-sdk/anthropic": "^3.0.13",
+    "@ai-sdk/deepseek": "^2.0.6",
     "@ai-sdk/google": "^3.0.3",
     "@ai-sdk/openai": "^3.0.4",
     "@ai-sdk/openai-compatible": "^2.0.3",
@@ -31,6 +32,7 @@
     "@replit/codemirror-indentation-markers": "^6.5.3",
     "@replit/codemirror-minimap": "^0.5.2",
     "@tabler/icons-react": "^3.36.1",
+    "@tanstack/react-pacer": "^0.19.2",
     "ai": "^6.0.11",
     "allotment": "^1.20.5",
     "class-variance-authority": "^0.7.1",
@@ -42,6 +44,7 @@
     "embla-carousel-react": "^8.6.0",
     "inngest": "^3.48.1",
     "input-otp": "^1.4.2",
+    "ky": "^1.14.2",
     "next": "16.1.1",
     "next-themes": "^0.4.6",
     "react": "19.2.3",

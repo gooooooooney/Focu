@@ -5,7 +5,8 @@ import { FileBreadCrumbs } from "./file-bread-crumbs";
 import { TopNavigation } from "./top-navigation";
 import Image from "next/image";
 import { CodeEditor } from "./code-editor";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useDebouncedCallback } from "@tanstack/react-pacer"
 
 const DEBOUNCE_MS = 1500;
 
@@ -22,18 +23,15 @@ export default function EditorView({ projectId }: { projectId: Id<"projects"> })
   const isActiveFileBinary = activeFile && activeFile.storageId
   const isActiveFileText = activeFile && !activeFile.storageId
 
-  const handleUpdate = (value: string) => {
+  const handleUpdate = useDebouncedCallback((value: string) => {
     if (!activeFile) return
-    if (timeoutId.current) {
-      clearTimeout(timeoutId.current)
-    }
-    timeoutId.current = setTimeout(() => {
-      updateFile({
-        id: activeFile._id,
-        content: value,
-      })
-    }, DEBOUNCE_MS);
-  }
+    updateFile({
+      id: activeFile._id,
+      content: value,
+    })
+  }, {
+    wait: DEBOUNCE_MS,
+  })
 
   return (
     <div className="h-full flex flex-col">
