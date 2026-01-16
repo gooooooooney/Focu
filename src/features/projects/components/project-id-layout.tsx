@@ -1,9 +1,9 @@
 "use client"
 
+import { ConversationSidebar } from "@/features/conversation/components/conversation-sidebar";
 import { Id } from "../../../../convex/_generated/dataModel"
 import { Navbar } from "./navbar"
 import { Allotment } from "allotment"
-import "allotment/dist/style.css";
 
 
 const MIN_SIDEBAR_WIDTH = 200
@@ -34,9 +34,7 @@ export const ProjectIdLayout: React.FC<React.PropsWithChildren<{ projectId: Id<"
                         maxSize={MAX_SIDEBAR_WIDTH}
                         preferredSize={DEFAULT_CONVERSATION_SIDEBAR_WIDTH}
                     >
-                        <div>
-                            Conversation sidebar
-                        </div>
+                        <ConversationSidebar projectId={projectId} />
                     </Allotment.Pane>
                     <Allotment.Pane>
                         {children}

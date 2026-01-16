@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
-
+import { Providers } from "@/components/providers";
 
 
 import "./globals.css";
-import { Providers } from "@/components/providers";
+import "allotment/dist/style.css";
+
+
 
 const notoSans = Noto_Sans({ variable: '--font-sans' });
 
