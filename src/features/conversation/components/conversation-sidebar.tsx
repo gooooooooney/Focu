@@ -66,6 +66,8 @@ export const ConversationSidebar = ({ projectId }: { projectId: Id<"projects"> }
         } catch (error) {
             toast.error("Failed to submit message");
         }
+        setInput("");
+
     };
 
     return (

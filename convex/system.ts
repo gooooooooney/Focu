@@ -67,3 +67,20 @@ export const createMessage = mutation({
         return messageId;
     }
 })
+
+export const updateContextMessage = mutation({
+    args: {
+        internalKey: v.string(),
+        messageId: v.id("messages"),
+        context: v.string(),
+    },
+    handler(ctx, args) {
+        validateInternalKey(args.internalKey)
+
+        return ctx.db.patch("messages", args.messageId, {
+            context: args.context,
+            updatedAt: Date.now(),
+            status: "completed",
+        });
+    }
+})
