@@ -49,7 +49,7 @@ export const processMessage = inngest.createFunction(
             throw new NonRetriableError("Missing CONVEX_INTERNAL_KEY environment variable");
         }
 
-        await step.sleep("wait-for-ai-processing", "5s");
+        await step.sleep("wait-for-ai-processing", "50s");
 
         await step.run("update-assistant-message", async () => {
             await convex.mutation(api.system.updateContextMessage, {
