@@ -1,6 +1,12 @@
 import { IconChevronRight, IconFileFunction } from "@tabler/icons-react"
 import { FileIcon, FolderIcon } from "@react-symbols/icons/utils"
-import { useCreateFile, useCreateFolder, useDeleteFile, useFolderContents, useRenamingFile } from "../../hooks/use-files"
+import {
+    useCreateFile,
+    useCreateFolder,
+    useFolderContents,
+    useRenameFile,
+    useDeleteFile,
+} from "@/features/projects/hooks/use-files";
 import { Doc, Id } from "../../../../../convex/_generated/dataModel"
 import { getItemPadding } from "./constants"
 import { CreateInput } from "./create-input"
@@ -35,9 +41,14 @@ export const Tree = ({ item, level, projectId }: TreeProps) => {
 
     const createFolder = useCreateFolder()
 
-    const renameFile = useRenamingFile()
-
-    const deleteFile = useDeleteFile()
+    const renameFile = useRenameFile({
+        projectId,
+        parentId: item.parentId,
+    });
+    const deleteFile = useDeleteFile({
+        projectId,
+        parentId: item.parentId,
+    });
 
     const folderContents = useFolderContents({
         projectId: projectId,
