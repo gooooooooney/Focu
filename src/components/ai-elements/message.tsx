@@ -30,7 +30,7 @@ export type MessageProps = HTMLAttributes<HTMLDivElement> & {
 export const Message = ({ className, from, ...props }: MessageProps) => (
   <div
     className={cn(
-      "group flex w-full max-w-[95%] flex-col gap-2",
+      "group flex w-full max-w-[80%] flex-col gap-2",
       from === "user" ? "is-user ml-auto justify-end" : "is-assistant",
       className
     )}
@@ -48,7 +48,7 @@ export const MessageContent = ({
   <div
     className={cn(
       "is-user:dark flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-hidden text-sm",
-      "group-[.is-user]:ml-auto group-[.is-user]:rounded-lg group-[.is-user]:bg-secondary group-[.is-user]:px-4 group-[.is-user]:py-3 group-[.is-user]:text-foreground",
+      "group-[.is-user]:ml-auto group-[.is-user]:rounded-lg group-[.is-user]:bg-accent group-[.is-user]:px-4 group-[.is-user]:py-3 group-[.is-user]:text-foreground",
       "group-[.is-assistant]:text-foreground",
       className
     )}
@@ -84,7 +84,9 @@ export const MessageAction = ({
   ...props
 }: MessageActionProps) => {
   const button = (
-    <Button size={size} type="button" variant={variant} {...props}>
+    <Button size={size}
+      // @ts-ignore
+      type="button" variant={variant} {...props}>
       {children}
       <span className="sr-only">{label || tooltip}</span>
     </Button>
@@ -250,6 +252,7 @@ export const MessageBranchPrevious = ({
       disabled={totalBranches <= 1}
       onClick={goToPrevious}
       size="icon-sm"
+      // @ts-ignore
       type="button"
       variant="ghost"
       {...props}
@@ -274,6 +277,7 @@ export const MessageBranchNext = ({
       disabled={totalBranches <= 1}
       onClick={goToNext}
       size="icon-sm"
+      // @ts-ignore
       type="button"
       variant="ghost"
       {...props}
@@ -309,8 +313,9 @@ export type MessageResponseProps = ComponentProps<typeof Streamdown>;
 export const MessageResponse = memo(
   ({ className, ...props }: MessageResponseProps) => (
     <Streamdown
+      shikiTheme={["one-dark-pro", "one-light"]}
       className={cn(
-        "size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
+        "size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&>div]:bg-accent [&>div]:rounded-md",
         className
       )}
       {...props}
@@ -375,7 +380,9 @@ export function MessageAttachment({
       ) : (
         <>
           <Tooltip>
-            <TooltipTrigger render={<div className="flex size-full shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground" />} nativeButton={false}><PaperclipIcon className="size-4" /></TooltipTrigger>
+            <TooltipTrigger render={<div className="flex size-full shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground" />}
+              // @ts-ignore
+              nativeButton={false}><PaperclipIcon className="size-4" /></TooltipTrigger>
             <TooltipContent>
               <p>{attachmentLabel}</p>
             </TooltipContent>

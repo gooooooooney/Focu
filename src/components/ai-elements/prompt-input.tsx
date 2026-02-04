@@ -153,7 +153,7 @@ export function PromptInputProvider({
     (FileUIPart & { id: string })[]
   >([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const openRef = useRef<() => void>(() => {});
+  const openRef = useRef<() => void>(() => { });
 
   const add = useCallback((files: File[] | FileList) => {
     const incoming = Array.from(files);
@@ -298,38 +298,41 @@ export function PromptInputAttachment({
   return (
     <PromptInputHoverCard>
       <HoverCardTrigger render={<div className={cn(
-                      "group relative flex h-8 cursor-pointer select-none items-center gap-1.5 rounded-md border border-border px-1.5 font-medium text-sm transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-                      className
-                    )} key={data.id} {...props} />} nativeButton={false}><div className="relative size-5 shrink-0">
-                      <div className="absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded bg-background transition-opacity group-hover:opacity-0">
-                        {isImage ? (
-                          <img
-                            alt={filename || "attachment"}
-                            className="size-5 object-cover"
-                            height={20}
-                            src={data.url}
-                            width={20}
-                          />
-                        ) : (
-                          <div className="flex size-5 items-center justify-center text-muted-foreground">
-                            <PaperclipIcon className="size-3" />
-                          </div>
-                        )}
-                      </div>
-                      <Button
-                        aria-label="Remove attachment"
-                        className="absolute inset-0 size-5 cursor-pointer rounded p-0 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 [&>svg]:size-2.5"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          attachments.remove(data.id);
-                        }}
-                        type="button"
-                        variant="ghost"
-                      >
-                        <XIcon />
-                        <span className="sr-only">Remove</span>
-                      </Button>
-                    </div><span className="flex-1 truncate">{attachmentLabel}</span></HoverCardTrigger>
+        "group relative flex h-8 cursor-pointer select-none items-center gap-1.5 rounded-md border border-border px-1.5 font-medium text-sm transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        className
+      )} key={data.id} {...props} />}
+        // @ts-ignore
+        nativeButton={false}><div className="relative size-5 shrink-0">
+          <div className="absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded bg-background transition-opacity group-hover:opacity-0">
+            {isImage ? (
+              <img
+                alt={filename || "attachment"}
+                className="size-5 object-cover"
+                height={20}
+                src={data.url}
+                width={20}
+              />
+            ) : (
+              <div className="flex size-5 items-center justify-center text-muted-foreground">
+                <PaperclipIcon className="size-3" />
+              </div>
+            )}
+          </div>
+          <Button
+            aria-label="Remove attachment"
+            className="absolute inset-0 size-5 cursor-pointer rounded p-0 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 [&>svg]:size-2.5"
+            onClick={(e) => {
+              e.stopPropagation();
+              attachments.remove(data.id);
+            }}
+            // @ts-ignore
+            type="button"
+            variant="ghost"
+          >
+            <XIcon />
+            <span className="sr-only">Remove</span>
+          </Button>
+        </div><span className="flex-1 truncate">{attachmentLabel}</span></HoverCardTrigger>
       <PromptInputHoverCardContent className="w-auto p-2">
         <div className="w-auto space-y-3">
           {isImage && (
@@ -703,9 +706,9 @@ export const PromptInput = ({
     const text = usingProvider
       ? controller.textInput.value
       : (() => {
-          const formData = new FormData(form);
-          return (formData.get("message") as string) || "";
-        })();
+        const formData = new FormData(form);
+        return (formData.get("message") as string) || "";
+      })();
 
     // Reset form immediately after capturing text to avoid race condition
     // where user input during async blob conversion would be lost
@@ -778,7 +781,7 @@ export const PromptInput = ({
         ref={formRef}
         {...props}
       >
-        <InputGroup className="overflow-hidden">{children}</InputGroup>
+        <InputGroup className="overflow-hidden rounded-lg!">{children}</InputGroup>
       </form>
     </>
   );
@@ -819,7 +822,7 @@ export const PromptInputTextarea = ({
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
     // Call the external onKeyDown handler first
     onKeyDown?.(e);
-    
+
     // If the external handler prevented default, don't run internal logic
     if (e.defaultPrevented) {
       return;
@@ -886,15 +889,15 @@ export const PromptInputTextarea = ({
 
   const controlledProps = controller
     ? {
-        value: controller.textInput.value,
-        onChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
-          controller.textInput.setInput(e.currentTarget.value);
-          onChange?.(e);
-        },
-      }
+      value: controller.textInput.value,
+      onChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
+        controller.textInput.setInput(e.currentTarget.value);
+        onChange?.(e);
+      },
+    }
     : {
-        onChange,
-      };
+      onChange,
+    };
 
   return (
     <InputGroupTextarea
@@ -1104,11 +1107,9 @@ export const PromptInputSelectValue = ({
 export type PromptInputHoverCardProps = ComponentProps<typeof HoverCard>;
 
 export const PromptInputHoverCard = ({
-  openDelay = 0,
-  closeDelay = 0,
   ...props
 }: PromptInputHoverCardProps) => (
-  <HoverCard closeDelay={closeDelay} openDelay={openDelay} {...props} />
+  <HoverCard  {...props} />
 );
 
 export type PromptInputHoverCardTriggerProps = ComponentProps<

@@ -32,7 +32,6 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
                     <AuthLoading>
                         <AuthLoadingView />
                     </AuthLoading>
-
                 </ThemeProvider>
             </ConvexProviderWithClerk>
         </ClerkProvider>

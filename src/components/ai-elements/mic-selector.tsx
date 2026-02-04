@@ -133,7 +133,7 @@ export const MicSelectorTrigger = ({
   }, [setWidth]);
 
   return (
-    <PopoverTrigger render={<Button variant="outline" {...props} ref={ref} />}>{children}<ChevronsUpDownIcon
+    <PopoverTrigger render={<Button variant="outline" {...props} ref={ref as any} />}>{children}<ChevronsUpDownIcon
                 className="shrink-0 text-muted-foreground"
                 size={16}
               /></PopoverTrigger>

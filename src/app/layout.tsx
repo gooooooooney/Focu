@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 
 import "./globals.css";
 import "allotment/dist/style.css";
+import { Toaster } from "sonner";
 
 
 
@@ -39,7 +40,9 @@ export default function RootLayout({
         <Providers>
 
           {children}
-
+          <Toaster
+          richColors
+           />
         </Providers>
       </body>
     </html>

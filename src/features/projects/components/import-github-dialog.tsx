@@ -60,9 +60,12 @@ export const ImportGithubDialog = ({
 
         router.push(`/projects/${projectId}`);
       } catch (error) {
+        
         if (error instanceof HTTPError) {
           const body = await error.response.json<{ error: string }>();
+          console.log(body);
           if (body.error?.includes("Pro plan required")) {
+            console.log("Pro plan required");
             toast.error("Upgrade to import repositories", {
               action: {
                 label: "Upgrade",

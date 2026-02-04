@@ -81,7 +81,7 @@ export const exportToGithub = inngest.createFunction(
     const { data: repo } = await step.run("create-repo", async () => {
       return await octokit.rest.repos.createForAuthenticatedUser({
         name: repoName,
-        description: description || `Exported from Polaris`,
+        description: description || `Exported from Focu`,
         private: visibility === "private",
         auto_init: true,
       });
