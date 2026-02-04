@@ -72,13 +72,11 @@ export async function POST(request: Request) {
             .replace("{nextLines}", nextLines || "")
             .replace("{code}", code);
 
-        console.log("before generating suggestion:")
         const { output } = await generateText({
             model: anthropic("claude-3-5-haiku-latest"),
             prompt,
             output: Output.object({ schema: suggestionSchema })
         });
-        console.log("Generated suggestion:", output);
 
         return NextResponse.json(output);
     } catch (error) {

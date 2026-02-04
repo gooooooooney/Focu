@@ -2,10 +2,10 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import {
-  adjectives,
-  animals,
-  colors,
-  uniqueNamesGenerator,
+    adjectives,
+    animals,
+    colors,
+    uniqueNamesGenerator,
 } from "unique-names-generator";
 
 
@@ -16,78 +16,84 @@ import { api } from "../../../../../convex/_generated/api";
 import { DEFAULT_CONVERSATION_TITLE } from "@/features/conversation/constants";
 
 const requestSchema = z.object({
-  prompt: z.string().min(1),
+    prompt: z.string().min(1),
 });
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+    const { userId, has } = await auth();
 
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+    if (!userId) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  const internalKey = process.env.CONVEX_INTERNAL_KEY;
+    const hasPro = has({ plan: "pro" });
 
-  if (!internalKey) {
-    return NextResponse.json(
-      { error: "Internal key not configured" },
-      { status: 500 }
+    if (!hasPro) {
+        return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
+    }
+
+    const internalKey = process.env.CONVEX_INTERNAL_KEY;
+
+    if (!internalKey) {
+        return NextResponse.json(
+            { error: "Internal key not configured" },
+            { status: 500 }
+        );
+    }
+
+    const body = await request.json();
+    const { prompt } = requestSchema.parse(body);
+
+    // Generate a random project name
+    const projectName = uniqueNamesGenerator({
+        dictionaries: [adjectives, animals, colors],
+        separator: "-",
+        length: 3,
+    });
+
+    // Create project and conversation together
+    const { projectId, conversationId } = await convex.mutation(
+        api.system.createProjectWithConversation,
+        {
+            internalKey,
+            projectName,
+            conversationTitle: DEFAULT_CONVERSATION_TITLE,
+            ownerId: userId,
+        },
     );
-  }
 
-  const body = await request.json();
-  const { prompt } = requestSchema.parse(body);
+    // Create user message
+    await convex.mutation(api.system.createMessage, {
+        internalKey,
+        conversationId,
+        projectId,
+        role: "user",
+        context: prompt,
+    });
 
-  // Generate a random project name
-  const projectName = uniqueNamesGenerator({
-    dictionaries: [adjectives, animals, colors],
-    separator: "-",
-    length: 3,
-  });
+    // Create assistant message placeholder with processing status
+    const assistantMessageId = await convex.mutation(
+        api.system.createMessage,
+        {
+            internalKey,
+            conversationId,
+            projectId,
+            role: "assistant",
+            context: "",
+            status: "processing",
+        },
+    );
 
-  // Create project and conversation together
-  const { projectId, conversationId } = await convex.mutation(
-    api.system.createProjectWithConversation,
-    {
-      internalKey,
-      projectName,
-      conversationTitle: DEFAULT_CONVERSATION_TITLE,
-      ownerId: userId,
-    },
-  );
+    // Trigger Inngest to process the message
+    await inngest.send({
+        name: "message/sent",
+        data: {
+            messageId: assistantMessageId,
+            conversationId,
+            projectId,
+            message: prompt,
+        },
+    });
 
-  // Create user message
-  await convex.mutation(api.system.createMessage, {
-    internalKey,
-    conversationId,
-    projectId,
-    role: "user",
-    context: prompt,
-  });
-
-  // Create assistant message placeholder with processing status
-  const assistantMessageId = await convex.mutation(
-    api.system.createMessage,
-    {
-      internalKey,
-      conversationId,
-      projectId,
-      role: "assistant",
-      context: "",
-      status: "processing",
-    },
-  );
-
-  // Trigger Inngest to process the message
-  await inngest.send({
-    name: "message/sent",
-    data: {
-      messageId: assistantMessageId,
-      conversationId,
-      projectId,
-      message: prompt,
-    },
-  });
-
-  return NextResponse.json({ projectId });
+    return NextResponse.json({ projectId });
 };

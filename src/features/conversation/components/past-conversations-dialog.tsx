@@ -51,7 +51,6 @@ export const PastConversationsDialog = ({
                     <CommandGroup heading="Conversations">
                         {conversations?.map((conversation) => (
                             <CommandItem
-                                className="data-[selected=true]:bg-red-500"
                                 key={conversation._id}
                                 value={`${conversation.title}-${conversation._id}`}
                                 onSelect={() => handleSelect(conversation._id)}
